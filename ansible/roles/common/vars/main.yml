@@ -1,0 +1,5 @@
+---
+activator_version: "1.3.10"
+activator_min_archive: "typesafe-activator-{{activator_version}}-minimal.zip"
+activator_home: "/opt/activator/activator-{{activator_version}}-minimal"
+

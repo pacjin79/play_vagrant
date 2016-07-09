@@ -1,0 +1,5 @@
+app
+.vagrant
+.sbt
+.idea
+.ivy2

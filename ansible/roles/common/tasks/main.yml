@@ -1,0 +1,39 @@
+---
+- stat: path="/tmp/{{activator_min_archive}}"
+  register: activator_archive_stat
+
+- name: update apt cache
+  apt: update_cache=true
+  become: true
+
+- name: install unzip
+  apt: name=unzip state=present
+  become: true
+
+- name: create activator dir if doesn't exist
+  file: path="/opt/activator" state="directory" owner=vagrant
+  become: true
+
+- name: copy activator minimal
+  copy: src=../tools/{{activator_min_archive}} dest=/tmp/{{activator_min_archive}}
+  when: activator_archive_stat.stat.exists == false
+
+- name: unzip activator archive
+  unarchive: src=/tmp/{{activator_min_archive}} dest=/opt/activator copy=no
+
+- name: update activator env variables
+  lineinfile:
+    dest: /etc/environment
+    line: "export ACTIVATOR_HOME={{activator_home}}"
+    insertbefore: "PATH(?==)"
+    state: present
+  become: true
+
+- name: update existing path for activator
+  lineinfile:
+    dest: /etc/environment
+    regexp: 'PATH="(.*)"'
+    line: 'PATH="\1:{{activator_home}}/bin"'
+    backrefs: yes
+    state: present
+  become: true
