@@ -1,0 +1,1 @@
+# Vagrant box for play framework
